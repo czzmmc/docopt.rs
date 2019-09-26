@@ -32,14 +32,14 @@ struct Args {
 }
 
 fn main() {
-    let args: Args = Docopt::new(USAGE)
-        .and_then(|d| d.deserialize())
-        .unwrap_or_else(|e| e.exit());
-    println!("{:?}", args);
+    // let args: Args = Docopt::new(USAGE)
+    //     .and_then(|d| d.deserialize())
+    //     .unwrap_or_else(|e| e.exit());
+    // println!("{:?}", args);
 
-    println!("\nSome values:");
-    println!("  Speed: {}", args.flag_speed);
-    println!("  Drifting? {}", args.flag_drifting);
-    println!("  Names: {:?}", args.arg_name);
-    println!("  Command 'ship' invoked? {:?}", args.cmd_ship);
+    // println!("\nSome values:");
+    // println!("  Speed: {}", args.flag_speed);
+    // println!("  Drifting? {}", args.flag_drifting);
+    // println!("  Names: {:?}", args.arg_name);
+    // println!("  Command 'ship' invoked? {:?}", args.cmd_ship);
 }

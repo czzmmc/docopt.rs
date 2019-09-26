@@ -1,9 +1,12 @@
+use std::prelude::v1::*;
+use std::{result,format,vec};
+
 use std::collections::HashMap;
 use std::error::Error as StdError;
 use std::fmt::{self, Debug};
 use std::io::{self, Write};
 use std::str::FromStr;
-use std::result;
+// use std::result;
 
 use lazy_static::lazy_static;
 use regex::{Captures, Regex};
@@ -111,10 +114,11 @@ impl Error {
     pub fn exit(&self) -> ! {
         if self.fatal() {
             werr!("{}\n", self);
-            ::std::process::exit(1)
+            panic!("::std::process::exit(1)")
         } else {
             let _ = writeln!(&mut io::stdout(), "{}", self);
-            ::std::process::exit(0)
+            //::std::process::exit(0)
+             panic!("::std::process::exit(0)")
         }
     }
 }
@@ -162,11 +166,11 @@ impl de::Error for Error {
 /// This can be used to match command line arguments to produce a `ArgvMap`.
 #[derive(Clone, Debug)]
 pub struct Docopt {
-    p: Parser,
-    argv: Option<Vec<String>>,
-    options_first: bool,
-    help: bool,
-    version: Option<String>,
+   p: Parser,
+   argv: Option<Vec<String>>,
+   options_first: bool,
+   help: bool,
+   version: Option<String>,
 }
 
 impl Docopt {
@@ -199,7 +203,7 @@ impl Docopt {
     /// `ArgvMap`.
     pub fn deserialize<'a, 'de: 'a, D>(&'a self) -> Result<D>
         where D: de::Deserialize<'de>
-    {
+    {   
         self.parse().and_then(|vals| vals.deserialize())
     }
 
@@ -218,6 +222,7 @@ impl Docopt {
     /// enabled by default), then `Help` or `Version` errors are returned
     /// if `--help` or `--version` is present.
     pub fn parse(&self) -> Result<ArgvMap> {
+      
         let argv = self.argv.clone().unwrap_or_else(Docopt::get_argv);
         let vals =
             self.p.parse_argv(argv, self.options_first)
@@ -312,7 +317,8 @@ impl Docopt {
 
     fn get_argv() -> Vec<String> {
         // Hmm, we should probably handle a Unicode decode error here... ---AG
-        ::std::env::args().skip(1).collect()
+        // ::std::env::args().skip(1).collect()
+        Vec::<String>::new()
     }
 }
 
@@ -379,6 +385,7 @@ impl ArgvMap {
     /// In this example, only the `bool` type was used, but any type satisfying
     /// the `Deserialize` trait is valid.
     pub fn deserialize<'de, T: de::Deserialize<'de>>(self) -> Result<T> {
+       
         de::Deserialize::deserialize(&mut Deserializer {
                                               vals: self,
                                               stack: vec![],
@@ -467,6 +474,7 @@ impl ArgvMap {
     /// Converts a struct field name to a Docopt key.
     #[doc(hidden)]
     pub fn struct_field_to_key(field: &str) -> String {
+         
         lazy_static! {
             static ref FLAG: Regex = regex!(r"^flag_");
             static ref ARG: Regex = regex!(r"^arg_");
@@ -474,6 +482,7 @@ impl ArgvMap {
             static ref CMD: Regex = regex!(r"^cmd_");
         }
         fn desanitize(name: &str) -> String {
+
             name.replace("_", "-")
         }
         let name =
@@ -484,7 +493,7 @@ impl ArgvMap {
                 pre_name.push_str(&*name);
                 pre_name
             } else if field.starts_with("arg_") {
-                let name = ARG.replace(field, "").into_owned();
+                let name = ARG.replace(field, "").into_owned();        
                 if LETTERS.is_match(&name) {
                     name
                 } else {
@@ -498,6 +507,7 @@ impl ArgvMap {
             } else {
                 panic!("Unrecognized struct field: '{}'", field)
             };
+        
         desanitize(&*name)
     }
 }

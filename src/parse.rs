@@ -37,13 +37,14 @@
 // Long term:
 //
 //   - Write a specification for Docopt.
-
+use std::prelude::v1::*;
+use std::vec;
 use std::borrow::ToOwned;
 use std::collections::{HashMap, HashSet};
 use std::collections::hash_map::Entry::{Vacant, Occupied};
 use std::cmp::Ordering;
 use std::fmt;
-
+use std::format;
 use lazy_static::lazy_static;
 use regex;
 use regex::Regex;
@@ -97,6 +98,7 @@ impl Parser {
 
     pub fn parse_argv(&self, argv: Vec<String>, options_first: bool)
                          -> Result<Argv<'_>, String> {
+                            
         Argv::new(self, argv, options_first)
     }
 }
@@ -165,7 +167,7 @@ impl Parser {
             "^(?:{})?\\s*(.*?)\\s*$",
             regex::escape(cap_or_empty(&caps, "prog")));
         let pats = Regex::new(&*mprog).unwrap();
-
+        
         if cap_or_empty(&caps, "pats").is_empty() {
             let pattern = PatParser::new(self, "").parse()?;
             self.usages.push(pattern);
@@ -174,9 +176,11 @@ impl Parser {
                 for pat in pats.captures_iter(line.trim()) {
                     let pattern = PatParser::new(self, &pat[1]).parse()?;
                     self.usages.push(pattern);
+                    
                 }
             }
         }
+                
         Ok(())
     }
 
@@ -454,6 +458,7 @@ impl<'a> PatParser<'a> {
                     seq.push(self.group()?);
                 }
                 _ => {
+                    
                     if Atom::is_short(self.cur()) {
                         seq.extend(self.flag_short()?.into_iter());
                     } else if Atom::is_long(self.cur()) {
@@ -463,13 +468,14 @@ impl<'a> PatParser<'a> {
                         // Arguments for -s and --short are picked up
                         // when parsing flags.
                         seq.push(self.positional()?);
-                    } else if Atom::is_cmd(self.cur()) {
+                    } else if Atom::is_cmd(self.cur()) {                 
                         seq.push(self.command()?);
                     } else {
                         err!("Unknown token type '{}'.", self.cur())
                     }
                 }
             }
+            
         }
         if alts.is_empty() {
             Ok(Sequence(seq))
@@ -817,7 +823,7 @@ impl Atom {
     fn is_cmd(s: &str) -> bool {
         lazy_static! {
             static ref RE: Regex = regex!(r"^(-|--|[^-]\S*)$");
-        }
+        }   
         RE.is_match(s)
     }
 
@@ -914,6 +920,7 @@ impl<'a> Argv<'a> {
             options_first: options_first,
         };
         a.parse()?;
+       
         for flag in &a.flags {
             match a.counts.entry(flag.atom.clone()) {
                 Vacant(v) => { v.insert(1); }
@@ -925,6 +932,7 @@ impl<'a> Argv<'a> {
 
     fn parse(&mut self) -> Result<(), String> {
         let mut seen_double_dash = false;
+         
         while self.curi < self.argv.len() {
             let do_flags =
                 !seen_double_dash
@@ -1181,6 +1189,7 @@ impl<'a, 'b> Matcher<'a, 'b> {
     fn matches(argv: &'a Argv<'_>, pat: &Pattern)
               -> Option<SynonymMap<String, Value>> {
         let m = Matcher { argv: argv };
+      
         let init = MState {
             argvi: 0,
             counts: argv.counts.clone(),
@@ -1198,7 +1207,7 @@ impl<'a, 'b> Matcher<'a, 'b> {
          .map(|mut s| {
              m.add_flag_values(&mut s);
              m.add_default_values(&mut s);
-
+            
              // Build a synonym map so that it's easier to look up values.
              let mut synmap: SynonymMap<String, Value> =
                  s.vals.into_iter()
@@ -1271,10 +1280,12 @@ impl<'a, 'b> Matcher<'a, 'b> {
     }
 
     fn state_consumed_all_argv(&self, state: &MState) -> bool {
+       
         self.argv.positional.len() == state.argvi
     }
 
     fn state_has_valid_flags(&self, state: &MState) -> bool {
+          
         self.argv.counts.keys().all(|flag| state.max_counts.contains_key(flag))
     }
 

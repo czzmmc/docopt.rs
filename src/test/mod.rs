@@ -124,7 +124,7 @@ fn regression_issue_219() {
         encode [-v <type> <param>]...
     ";
 
-    let argv = &["encode", "-v", "bool", "true", "string", "foo"];
+    let argv = &["encode", "-v", "bool", "true","string", "foo"];
     let args: Args = Docopt::new(USAGE).unwrap().argv(argv).deserialize().unwrap();
     assert_eq!(args.arg_type, vec!["bool".to_owned(), "string".to_owned()]);
     assert_eq!(args.arg_param, vec!["true".to_owned(), "foo".to_owned()]);

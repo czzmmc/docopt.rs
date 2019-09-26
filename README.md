@@ -77,10 +77,10 @@ struct Args {
 }
 
 fn main() {
-    let args: Args = Docopt::new(USAGE)
-        .and_then(|d| d.deserialize())
-        .unwrap_or_else(|e| e.exit());
-    println!("{:?}", args);
+    // let args: Args = Docopt::new(USAGE)
+    //     .and_then(|d| d.deserialize())
+    //     .unwrap_or_else(|e| e.exit());
+    // println!("{:?}", args);
 }
 ```
 
@@ -129,18 +129,18 @@ Options:
 ";
 
 fn main() {
-    let args = Docopt::new(USAGE)
-                      .and_then(|dopt| dopt.parse())
-                      .unwrap_or_else(|e| e.exit());
-    println!("{:?}", args);
+    // let args = Docopt::new(USAGE)
+    //                   .and_then(|dopt| dopt.parse())
+    //                   .unwrap_or_else(|e| e.exit());
+    // println!("{:?}", args);
 
-    // You can conveniently access values with `get_{bool,count,str,vec}`
-    // functions. If the key doesn't exist (or if, e.g., you use `get_str` on
-    // a switch), then a sensible default value is returned.
-    println!("\nSome values:");
-    println!("  Speed: {}", args.get_str("--speed"));
-    println!("  Drifting? {}", args.get_bool("--drifting"));
-    println!("  Names: {:?}", args.get_vec("<name>"));
+    // // You can conveniently access values with `get_{bool,count,str,vec}`
+    // // functions. If the key doesn't exist (or if, e.g., you use `get_str` on
+    // // a switch), then a sensible default value is returned.
+    // println!("\nSome values:");
+    // println!("  Speed: {}", args.get_str("--speed"));
+    // println!("  Drifting? {}", args.get_bool("--drifting"));
+    // println!("  Names: {:?}", args.get_vec("<name>"));
 }
 ```
 

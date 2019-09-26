@@ -27,8 +27,8 @@ struct Args {
 }
 
 fn main() {
-    let args: Args = Docopt::new(USAGE)
-        .and_then(|d| d.deserialize())
-        .unwrap_or_else(|e| e.exit());
-    println!("{:?}", args);
+    // let args: Args = Docopt::new(USAGE)
+    //     .and_then(|d| d.deserialize())
+    //     .unwrap_or_else(|e| e.exit());
+    // println!("{:?}", args);
 }

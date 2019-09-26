@@ -51,6 +51,6 @@ enum Command {
 fn main() {
     let args: Args = Docopt::new(USAGE)
         .and_then(|d| d.options_first(true).deserialize())
-        .unwrap_or_else(|e| e.exit());
+        .unwrap();
     println!("{:?}", args);
 }

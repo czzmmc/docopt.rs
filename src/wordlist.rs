@@ -1,9 +1,18 @@
+#![cfg_attr(all(feature = "mesalock_sgx",not(target_env = "sgx")), no_std)]
+#![cfg_attr(all(target_env = "sgx", target_vendor = "mesalock"), feature(rustc_private))]
+
+#[cfg(all(feature = "mesalock_sgx", not(target_env = "sgx")))]
+#[macro_use()]
+extern crate sgx_tstd as std;
+
+
+use std::prelude::v1::*;
 use std::collections::HashMap;
 use std::io::{self, Read, Write};
 
 use regex::Regex;
 use serde::Deserialize;
-
+use std::vec;
 use crate::dopt::Docopt;
 use crate::parse::{Atom, Parser};
 
@@ -58,12 +67,12 @@ struct Args {
 fn main() {
     let args: Args = Docopt::new(USAGE)
         .and_then(|d| d.deserialize())
-        .unwrap_or_else(|e| e.exit());
+        .unwrap();
     match run(args) {
         Ok(_) => {},
         Err(err) => {
             write!(&mut io::stderr(), "{}", err).unwrap();
-            ::std::process::exit(1)
+            panic!("::std::process::exit(1)");
         }
     }
 }
@@ -102,6 +111,6 @@ fn run(args: Args) -> Result<(), String> {
         // only be flags, which we always include in the wordlist.
         words.push(k.to_string());
     }
-    println!("{}", words.join(" "));
+    // println!("{}", words.join(" "));
     Ok(())
 }
