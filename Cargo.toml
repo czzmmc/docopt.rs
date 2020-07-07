@@ -27,8 +27,8 @@ lazy_static  = { version = "1.4.0", features = ["spin_no_std"] }
 regex        = { git = "https://github.com/mesalock-linux/regex-sgx" }
 serde  = { git = "https://github.com/mesalock-linux/serde-sgx",features = ["derive"] }
 
-strsim = {git = "https://github.com/GeminiCarrie/strsim-rs.git",tag="v0.9.2_sgx"}
-sgx_tstd = { rev = "v1.0.9", git = "https://github.com/baidu/rust-sgx-sdk.git",optional = true}
+strsim = {git = "https://github.com/czzmmc/strsim-rs.git",branch="sgx_dev"}
+sgx_tstd = { git = "https://github.com/apache/teaclave-sgx-sdk", rev = "v1.1.2",optional = true}
 
 [features]
 default=["mesalock_sgx"]
